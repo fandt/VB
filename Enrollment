@@ -1,0 +1,60 @@
+Sub Enrollment_Marion_test1()
+
+
+Dim loca As Integer
+Dim med As Range
+
+FinalRow = Cells(Rows.Count, 1).End(xlUp).Row
+
+loca = 1
+Do While loca < FinalRow
+  If Cells(loca, 1).Value = "Total" Then
+    Cells(loca, 1).Select
+    Exit Do
+  End If
+  loca = loca + 1
+  
+Loop
+MsgBox Selection.Address
+
+
+Range(Cells(1, 1), Cells(loca, 26)).Copy
+Worksheets.Add
+ActiveSheet.Paste
+
+Range(Cells(loca + 5, 1), Cells(loca * 2 + 5, 1)).Value = Range(Cells(1, 1), Cells(FinalRow, 1)).Value
+
+locah = 1
+Do While locah < 26
+  If Cells(1, locah).Value = "Total" Then
+    Cells(1, locah).Select
+    Exit Do
+  End If
+  locah = locah + 1
+  
+Loop
+Range(Cells(loca + 5, 3), Cells(loca + 5, locah)).Value = Range(Cells(1, 2), Cells(1, locah)).Value
+
+'Get PAW FIRE
+Dim groupid As Integer
+
+For groupid = loca + 6 To (loca * 2) + 6
+  If Cells(groupid, 1).Value = "70172-0004" Or Cells(groupid, 1).Value = "70172-0005" Or Cells(groupid, 1).Value = "70172-0008" Or Cells(groupid, 1).Value = "70172-0014" Or Cells(groupid, 1).Value = "70172-0015" Or Cells(groupid, 1).Value = "70172-0016" Or Cells(groupid, 1).Value = "70172-7000" Or Cells(groupid, 1).Value = "70172-7001" Then
+    Cells(groupid, 2) = "PAW"
+  ElseIf Cells(groupid, 1).Value = "70172-0007" Or Cells(groupid, 1).Value = "70172-0009" Then
+    Cells(groupid, 2) = "Fire"
+  Else
+    Cells(groupid, 2) = ""
+  End If
+Next groupid
+
+Dim singv As Integer
+Dim spouv As Integer
+Dim chilv As Integer
+Dim drenv As Integer
+Dim famv As Integer
+
+
+
+
+End Sub
