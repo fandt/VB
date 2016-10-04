@@ -1,3 +1,4 @@
+
 Sub Enrollment_Marion_test1()
 
 
@@ -15,13 +16,13 @@ Do While loca < FinalRow
   loca = loca + 1
   
 Loop
-MsgBox Selection.Address
 
 
 Range(Cells(1, 1), Cells(loca, 26)).Copy
 Worksheets.Add
 ActiveSheet.Paste
 
+Cells(loca + 4, 1).Value = "MEDICAL"
 Range(Cells(loca + 5, 1), Cells(loca * 2 + 5, 1)).Value = Range(Cells(1, 1), Cells(FinalRow, 1)).Value
 
 locah = 1
@@ -34,6 +35,7 @@ Do While locah < 26
   
 Loop
 Range(Cells(loca + 5, 3), Cells(loca + 5, locah)).Value = Range(Cells(1, 2), Cells(1, locah)).Value
+Cells(loca + 5, 2) = "Group"
 
 'Get PAW FIRE
 Dim groupid As Integer
@@ -48,13 +50,61 @@ For groupid = loca + 6 To (loca * 2) + 6
   End If
 Next groupid
 
-Dim singv As Integer
-Dim spouv As Integer
-Dim chilv As Integer
-Dim drenv As Integer
-Dim famv As Integer
+'Get summed values for enrollment
+Dim lacaen As Integer
+
+locaen = 1
+Do While locaen < 26
+  If Cells(1, locaen).Value = "Single" Then
+    Range(Cells(2, locaen), Cells(loca, locaen)).Copy
+    Range(Cells(loca + 6, 3), Cells(loca * 2 + 6, 3)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+  ElseIf Cells(1, locaen).Value = "Employee/ Spouse" Then
+    Range(Cells(2, locaen), Cells(loca, locaen)).Copy
+    Range(Cells(loca + 6, 4), Cells(loca * 2 + 6, 4)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+  ElseIf Cells(1, locaen).Value = "Employee/ Child" Then
+    Range(Cells(2, locaen), Cells(loca, locaen)).Copy
+    Range(Cells(loca + 6, 5), Cells(loca * 2 + 6, 5)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+  ElseIf Cells(1, locaen).Value = "Employee/ Children" Then
+    Range(Cells(2, locaen), Cells(loca, locaen)).Copy
+    Range(Cells(loca + 6, 6), Cells(loca * 2 + 6, 6)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+  ElseIf Cells(1, locaen).Value = "Family" Then
+    Range(Cells(2, locaen), Cells(loca, locaen)).Copy
+    Range(Cells(loca + 6, 7), Cells(loca * 2 + 6, 7)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+  End If
+  locaen = locaen + 1
+Loop
+
+'pivot
+Dim pvtCache As PivotCache
+Dim pvt As PivotTable
+Dim SrcData As String
+Dim field As PivotField
 
 
-
+SrcData = Range(Cells(loca + 5, 1), Cells(loca * 2 + 6, 7)).Address
+Set pvtCache = ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=SrcData)
+Set pvt = pvtCache.CreatePivotTable(TableDestination:=Cells(loca + 6, 10), TableName:="PivotTable1")
+  
+pvt.PivotFields("Group").Orientation = xlRowField
+With pvt.PivotFields("Single")
+  .Orientation = xlDataField
+  .Function = xlSum
+End With
+With pvt.PivotFields("Employee/ Spouse")
+  .Orientation = xlDataField
+  .Function = xlSum
+End With
+With pvt.PivotFields("Employee/ Child")
+  .Orientation = xlDataField
+  .Function = xlSum
+End With
+With pvt.PivotFields("Employee/ Children")
+  .Orientation = xlDataField
+  .Function = xlSum
+End With
+With pvt.PivotFields("Family")
+  .Orientation = xlDataField
+  .Function = xlSum
+End With
 
 End Sub
