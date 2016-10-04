@@ -7,6 +7,8 @@ Dim med As Range
 
 FinalRow = Cells(Rows.Count, 1).End(xlUp).Row
 
+'MEDICAL
+
 loca = 1
 Do While loca < FinalRow
   If Cells(loca, 1).Value = "Total" Then
@@ -17,10 +19,12 @@ Do While loca < FinalRow
   
 Loop
 
+MsgBox loca
 
 Range(Cells(1, 1), Cells(loca, 26)).Copy
 Worksheets.Add
 ActiveSheet.Paste
+ActiveSheet.Name = "Medical"
 
 Cells(loca + 4, 1).Value = "MEDICAL"
 Range(Cells(loca + 5, 1), Cells(loca * 2 + 5, 1)).Value = Range(Cells(1, 1), Cells(FinalRow, 1)).Value
@@ -81,7 +85,7 @@ Dim SrcData As String
 Dim field As PivotField
 
 
-SrcData = Range(Cells(loca + 5, 1), Cells(loca * 2 + 6, 7)).Address
+SrcData = Range(Cells(loca + 5, 1), Cells(loca * 2 + 2, 7)).Address
 Set pvtCache = ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=SrcData)
 Set pvt = pvtCache.CreatePivotTable(TableDestination:=Cells(loca + 6, 10), TableName:="PivotTable1")
   
@@ -106,5 +110,7 @@ With pvt.PivotFields("Family")
   .Orientation = xlDataField
   .Function = xlSum
 End With
+Range(Cells(loca + 5, 1), Cells(loca * 2 + 2, 7)).Select
 
+Worksheets("Table 1").Activate
 End Sub
