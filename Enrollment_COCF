@@ -1,38 +1,39 @@
 
-Sub Enrollment_COCF()
+Sub Enrollment_COCF_test1()
 
 
 Dim loca As Integer
 Dim med As Range
 
 FinalRow = Cells(Rows.Count, 1).End(xlUp).Row
-FinalCol = Cells(2, Columns.Count).End(xlToLeft).Column
-
+finalCol = Cells(2, Columns.Count).End(xlToLeft).Column + 1
+MsgBox (finalCol)
 'Get summed values for enrollment
 Dim locaen As Integer
 
 locaen = 1
-Do While locaen < 26
-  If Cells(2, locaen).Value = "Single" Then
-    Range(Cells(2, locaen), Cells(FinalRow, locaen)).Copy
-    Range(Cells(2, FinalCol + 1), Cells(FinalRow, FinalCol + 1)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
-    Cells(2, FinalCol + 1) = "Single"
-  ElseIf Cells(2, locaen).Value = "Employee/ Spouse" Then
-    Range(Cells(2, locaen), Cells(FinalRow, locaen)).Copy
-    Range(Cells(2, FinalCol + 2), Cells(FinalRow, FinalCol + 2)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
-    Cells(2, FinalCol + 2) = "Employee/ Spouse"
-  ElseIf Cells(2, locaen).Value = "Employee/ Child" Then
-    Range(Cells(2, locaen), Cells(FinalRow, locaen)).Copy
-    Range(Cells(2, FinalCol + 3), Cells(FinalRow, FinalCol + 3)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
-    Cells(2, FinalCol + 3) = "Employee/ Child"
-  ElseIf Cells(2, locaen).Value = "Employee/ Children" Then
-    Range(Cells(2, locaen), Cells(FinalRow, locaen)).Copy
-    Range(Cells(2, FinalCol + 4), Cells(FinalRow, FinalCol + 4)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
-    Cells(2, FinalCol + 4) = "Employee/ Children"
-  ElseIf Cells(2, locaen).Value = "Family" Then
-    Range(Cells(2, locaen), Cells(FinalRow, locaen)).Copy
-    Range(Cells(2, FinalCol + 5), Cells(FinalRow, FinalCol + 5)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
-    Cells(2, FinalCol + 5) = "Family"
+Do While locaen < finalCol
+  If Cells(1, locaen).Value = "Single" Then
+    Range(Cells(1, locaen), Cells(FinalRow, locaen)).Copy
+    Range(Cells(1, finalCol + 1), Cells(FinalRow, finalCol + 1)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+    Cells(1, finalCol + 1) = "Single"
+    MsgBox ("Single")
+  ElseIf Cells(1, locaen).Value = "Employee/ Spouse" Then
+    Range(Cells(1, locaen), Cells(FinalRow, locaen)).Copy
+    Range(Cells(1, finalCol + 2), Cells(FinalRow, finalCol + 2)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+    Cells(1, finalCol + 2) = "Employee/ Spouse"
+  ElseIf Cells(1, locaen).Value = "Employee/ Child" Then
+    Range(Cells(1, locaen), Cells(FinalRow, locaen)).Copy
+    Range(Cells(1, finalCol + 3), Cells(FinalRow, finalCol + 3)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+    Cells(1, finalCol + 3) = "Employee/ Child"
+  ElseIf Cells(1, locaen).Value = "Employee/ Children" Then
+    Range(Cells(1, locaen), Cells(FinalRow, locaen)).Copy
+    Range(Cells(1, finalCol + 4), Cells(FinalRow, finalCol + 4)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+    Cells(1, finalCol + 4) = "Employee/ Children"
+  ElseIf Cells(1, locaen).Value = "Family" Then
+    Range(Cells(1, locaen), Cells(FinalRow, locaen)).Copy
+    Range(Cells(1, finalCol + 5), Cells(FinalRow, finalCol + 5)).PasteSpecial Paste:=xlPasteAll, operation:=xlAdd
+    Cells(1, finalCol + 5) = "Family"
   End If
   locaen = locaen + 1
 Loop
@@ -42,9 +43,9 @@ Range(Cells(1, 1), Cells(FinalRow, 1)).Copy
 Worksheets.Add.Name = "Markup"
 ActiveSheet.Paste
 Worksheets("Table 1").Activate
-Range(Cells(2, FinalCol + 1), Cells(FinalRow, FinalCol + 5)).Copy
+Range(Cells(1, finalCol + 1), Cells(FinalRow, finalCol + 5)).Copy
 Worksheets("Markup").Activate
-Cells(2, 3).PasteSpecial xlPasteAll
+Cells(1, 3).PasteSpecial xlPasteAll
 
 
 'Get rid of extra row titles
@@ -53,7 +54,7 @@ With Worksheets(1).Range("A:A")
  med.Select
 End With
 loca = ActiveCell.Row
-Cells(2, 2) = "Union Status"
+Cells(1, 2) = "Union Status"
 
 
 'Get Union Status
@@ -65,14 +66,14 @@ Dim unionfile As Workbook
 Dim srchrange As Range
 Dim enrollmentsheet As Workbook
 
-Set Enrollment = ActiveWorkbook
+Set enrollment = ActiveWorkbook
 unionfilename = "Union Report.xlsx"
 unionfilepath = "H:\Accounts\City of Cedar Falls\Union Report.xlsx"
 Workbooks.Open (unionfilepath)
 Set unionfile = Workbooks(unionfilename)
 'Set srchrange = unionfile.Range("A1:C46")
 Set srchrange = Range(Cells(1, 1), Cells(50, 4))
-Enrollment.Activate
+enrollment.Activate
 
 For groupid = loca + 1 To FinalRow
   groupnum = Cells(groupid, 1).Value
@@ -80,7 +81,7 @@ For groupid = loca + 1 To FinalRow
 
   If Not groupnum = "" Then
     ustat = Application.WorksheetFunction.VLookup(groupnum, srchrange, 3, False)
-    Enrollment.Activate
+    enrollment.Activate
     Cells(groupid, 2) = ustat
   End If
 Next groupid
@@ -96,11 +97,12 @@ Dim field As PivotField
 FRMU = Cells(Rows.Count, 1).End(xlUp).Row
 
 
-SrcData = Range(Cells(2, 1), Cells(FRMU - 2, 7)).Address
+SrcData = Range(Cells(1, 1), Cells(FRMU - 2, 7)).Address
 Set pvtCache = ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:=SrcData)
 Set pvt = pvtCache.CreatePivotTable(TableDestination:=Cells(8, 10), TableName:="PivotTable1")
   
 pvt.PivotFields("Union Status").Orientation = xlRowField
+
 With pvt.PivotFields("Single")
   .Orientation = xlDataField
   .Function = xlSum
