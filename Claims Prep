@@ -1,0 +1,37 @@
+
+Sub Create_Client_File()
+
+Dim SelectHealthFile As Workbook
+Set SelectHealthFile = ActiveWorkbook
+
+'get name of client
+client = InputBox("Client Name:")
+If Len(client) = 0 Then Exit Sub
+
+'work on LargePaidReport tab first
+Worksheets("LargePaidReport").Activate
+Dim sht As Worksheet
+Dim LastRow As Long
+Set sht = SelectHealthFile.Worksheets("LargePaidReport")
+
+'get last row and filter for everyone except client
+LastRow = sht.Cells(sht.Rows.Count, "A").End(xlUp).Row
+ActiveSheet.Range("$a$8:$cb$" & LastRow).AutoFilter Field:=2, Criteria1:="<>" & client
+
+'delete active rows
+Dim groupID As Long
+Dim rng As Range
+Set rng = Range("A8")
+    If rng.Value <> "Group ID" Then
+        MsgBox ("template changed")
+    End If
+    
+ActiveSheet.Range("$A$9:$cb$" & LastRow).SpecialCells _
+    (xlCellTypeVisible).EntireRow.Delete
+    
+ActiveSheet.ShowAllData
+
+Range("A9:cb" & LastRow).Sort key1:=Range("H9"), _
+    order1:=xlAscending, Header:=xlYes
+
+End Sub
