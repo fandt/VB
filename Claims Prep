@@ -34,4 +34,39 @@ ActiveSheet.ShowAllData
 Range("A9:cb" & LastRow).Sort key1:=Range("H9"), _
     order1:=xlAscending, Header:=xlYes
 
+'2nd lazy loop, LargeClaims
+Worksheets("LargeClaims").Activate
+Set sht = SelectHealthFile.Worksheets("LargeClaims")
+'get last row and filter for everyone except client
+LastRow = sht.Cells(sht.Rows.Count, "A").End(xlUp).Row
+ActiveSheet.Range("$a$8:$h$" & LastRow).AutoFilter Field:=2, Criteria1:="<>" & client
+'delete active rows
+Set rng = Range("A8")
+    If rng.Value <> "Group ID" Then
+        MsgBox ("template changed")
+    End If
+ActiveSheet.Range("$A$9:$h$" & LastRow).SpecialCells _
+    (xlCellTypeVisible).EntireRow.Delete
+ActiveSheet.ShowAllData
+Range("A9:h" & LastRow).Sort key1:=Range("g9"), _
+    order1:=xlDescending, Header:=xlYes
+    
+'munging Large CLaims
+Range("H9:H" & LastRow).Copy Range("L9:L" & LastRow)
+Dim dttr As Range
+Set dttr = Range("L9:L" & LastRow)
+dttr.TextToColumns , DataType:=xlDelimited, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, OtherChar:=")"
+Range("N9:P" & LastRow).Cut Range("P9:P" & LastRow)
+Set dttr = Range("M9:M" & LastRow)
+dttr.TextToColumns , DataType:=xlDelimited, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, OtherChar:="$"
+Set dttr = Range("N9:N" & LastRow)
+dttr.TextToColumns , DataType:=xlDelimited, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, OtherChar:=";"
+Range("Q9:Q" & LastRow).Cut Range("S9:S" & LastRow)
+Set dttr = Range("p9:p" & LastRow)
+dttr.TextToColumns , DataType:=xlDelimited, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, OtherChar:="$"
+Set dttr = Range("q9:q" & LastRow)
+dttr.TextToColumns , DataType:=xlDelimited, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, OtherChar:=";"
+Set dttr = Range("s9:s" & LastRow)
+dttr.TextToColumns , DataType:=xlDelimited, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, OtherChar:="$"
+
 End Sub
